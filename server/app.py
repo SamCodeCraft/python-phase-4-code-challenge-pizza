@@ -3,6 +3,7 @@ from models import db, Restaurant, RestaurantPizza, Pizza
 from flask_migrate import Migrate
 from flask import Flask, request,make_response
 from flask_restful import Api
+
 import os
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -32,7 +33,7 @@ def get_restaurants():
     
 @app.route("/restaurants/<int:id>", methods=["GET"])
 def get_restaurant(id):
-    restaurant = Restaurant.query.get(id)
+    restaurant = db.session.get(Restaurant, id)
     if restaurant is None:
         return make_response({"error": "Restaurant not found"},404)
     return make_response(restaurant.to_dict(),200)
@@ -54,7 +55,7 @@ def get_pizza(id):
 
 @app.route("/restaurants/<int:id>", methods=["DELETE"])
 def delete_restaurant(id):
-    restaurant = Restaurant.query.get(id)
+    restaurant = db.session.get(Restaurant, id)
     if restaurant is None:
         return make_response({"error": "Restaurant not found"},404)
     
